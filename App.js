@@ -1,61 +1,23 @@
-import react, { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { FontAwesome } from "@expo/vector-icons";
+import * as SQLite from "expo-sqlite";
+import NotesScreen from "./components/NoteScreen";
+import AddScren from "./components/AddScreen";
 
-function NotesScreen({ navigation }) {
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <FontAwesome.Button
-          name="edit"
-          color="black"
-          size={25}
-          backgroundColor="yellow"
-          onPress={console.log("hello")}
-        />
-      ),
-    });
-  });
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+const db = SQLite.openDatabase("notes.db");
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
-        <Stack.Screen
-          name="Notes"
-          component={NotesScreen}
-          options={{
-            headerStyle: {
-              backgroundColor: "yellow",
-              borderBottomWidth: 1,
-              borderBottomColor: "grey",
-              height: 100,
-            },
-            headerTitleStyle: { fontWeight: "bold", fontSize: 25 },
-          }}
-        />
+      <Stack.Navigator
+        screenOptions={{ headerShown: false, presentation: "Modal" }}
+      >
+        {/* Different Stack compnents for screens so they don't affect each other */}
+        <Stack.Screen name="NotesStack" component={NotesScreen} />
+        <Stack.Screen name="Add Note" component={AddScren} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FAF884",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
